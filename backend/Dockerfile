@@ -23,12 +23,14 @@ RUN if [ "$use_remote_build" = "true" ]; then \
       build -c opt backend/src/apiserver:apiserver; \
   fi
 
+
+
 # Compile
-FROM python:3.5 as compiler
+FROM pkskubeflow/tensorflow:1.15.2-py3 as compiler
 RUN apt-get update -y && \
     apt-get install --no-install-recommends -y -q default-jdk python3-setuptools python3-dev
 RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py
-RUN python3 -m pip install --no-dependencies  tfx==0.21.0
+RUN python3 -m pip install  tfx==0.21.0
 
 WORKDIR /go/src/github.com/kubeflow/pipelines
 COPY sdk sdk
