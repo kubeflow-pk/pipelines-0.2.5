@@ -24,7 +24,7 @@ RUN npm i -D license-checker
 RUN node gen_licenses . && node gen_licenses server && \
     cat dependency-licenses.txt >> server/dependency-licenses.txt
 
-FROM node:12.14.1-alpine
+FROM node:12.18.3
 
 COPY --from=build ./src/frontend/server /server
 COPY --from=build ./src/frontend/build /client
