@@ -26,19 +26,19 @@ RUN if [ "$use_remote_build" = "true" ]; then \
 
 
 # Compile
-FROM pkskubeflow/tensorflow:1.15.2-py3 as compiler
-RUN apt-get update -y && \
-    apt-get install --no-install-recommends -y -q default-jdk python3-setuptools python3-dev
-RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py
-RUN python3 -m pip install  tfx==0.21.0
+#FROM pkskubeflow/tensorflow:1.15.2-py3 as compiler
+#RUN apt-get update -y && \
+#    apt-get install --no-install-recommends -y -q default-jdk python3-setuptools python3-dev
+#RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py
+#RUN python3 -m pip install  tfx==0.21.0
 
-WORKDIR /go/src/github.com/kubeflow/pipelines
-COPY sdk sdk
-WORKDIR /go/src/github.com/kubeflow/pipelines/sdk/python
-RUN python3 setup.py install
+#WORKDIR /go/src/github.com/kubeflow/pipelines
+#COPY sdk sdk
+#WORKDIR /go/src/github.com/kubeflow/pipelines/sdk/python
+#RUN python3 setup.py install
 
-WORKDIR /samples
-COPY ./samples .
+#WORKDIR /samples
+#COPY ./samples .
 
 #We need to check that all samples have been compiled without error.
 #For find program, the -exec argument is a filter predicate just like -name. It only affects whether the file is "found", not the find's exit code.
@@ -47,7 +47,7 @@ COPY ./samples .
 #I think it's better to just use a shell loop though.
 #RUN  for pipeline in $(find . -maxdepth 2 -name '*.py' -type f); do dsl-compile --py "$pipeline" --output "$pipeline.tar.gz"; done
 #The "for" loop breaks on all whitespace, so we either need to override IFS or use the "read" command instead.
-RUN  set -e; find core tutorials -maxdepth 2 -name '*.py' -type f | while read pipeline; do python3 "$pipeline"; done
+#RUN  set -e; find core tutorials -maxdepth 2 -name '*.py' -type f | while read pipeline; do python3 "$pipeline"; done
 
 FROM debian:stretch
 
@@ -62,7 +62,7 @@ RUN cp /usr/local/apiserver/linux_$(dpkg --print-architecture)_stripped/apiserve
     rm -rf /usr/local/apiserver
 COPY backend/src/apiserver/config/ /config
 
-COPY --from=compiler /samples/ /samples/
+#COPY --from=compiler /samples/ /samples/
 
 # Adding CA certificate so API server can download pipeline through URL
 RUN apt-get update && apt-get install -y ca-certificates
